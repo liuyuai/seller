@@ -13,7 +13,7 @@ function getEnv() {
   const hostName = location.hostname;
   //在默认的情况下都是在 开发环境
   let env = "dev";
-  let domain = ".dev.tgos.com.cn";
+  let domain = ".dev.66buy.com.cn";
   if (hostName.includes("test.66buy.com.cn")) {
     env = "test";
     domain = ".test.66buy.com.cn";
@@ -29,4 +29,10 @@ function getEnv() {
     DOMAIN: domain
   };
 }
-export default { SERVER_ENV, DOMAIN } = getEnv();
+
+const { SERVER_ENV, DOMAIN } = getEnv();
+
+export default {
+  SERVER_ENV,
+  DOMAIN
+};
