@@ -6,7 +6,8 @@
 面向对象思想  把一个模块中的所有方法 都绑到了这个模块的属性上  也就是一个属性一个方法 调用
 * */
 
-import { createService } from "_s/libs/http/http";
+// import { createService } from "_s/libs/http/http";
+import { createRequest } from "_s/libs/http/api-http";
 import base from "./base";
 import _ from "loadsh";
 import config from "_s/config";
@@ -20,7 +21,7 @@ function setService(serverList, serverName) {
   _.forEach(serverList, (urlList, mehtod) => {
     _.forEach(urlList, (url, urlName) => {
       result[urlName] = function(data = {}) {
-        return createService({ baseUrl })[mehtod](url, data);
+        return createRequest({ baseUrl })[mehtod]({ url, data });
       };
     });
   });

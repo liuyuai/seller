@@ -14,25 +14,41 @@ function getEnv() {
   //在默认的情况下都是在 开发环境
   let env = "dev";
   let domain = ".dev.66buy.com.cn";
+  let cookieDomain = ".dev.66buy.com.cn";
   if (hostName.includes("test.66buy.com.cn")) {
     env = "test";
     domain = ".test.66buy.com.cn";
+    cookieDomain = ".test.66buy.com.cn";
   } else if (hostName.includes("pre.66buy.com.cn")) {
     env = "pre";
     domain = ".pre.66buy.com.cn";
+    cookieDomain = ".pre.66buy.com.cn";
   } else if (hostName.includes("51tiangou.com")) {
     env = "product";
     domain = ".51tiangou.com";
+    cookieDomain = ".51tiangou.com";
   }
   return {
     SERVER_ENV: env,
-    DOMAIN: domain
+    DOMAIN: domain,
+    COOKIE_DOMAIN: cookieDomain
   };
 }
 
-const { SERVER_ENV, DOMAIN } = getEnv();
+const { SERVER_ENV, DOMAIN, COOKIE_DOMAIN } = getEnv();
+const DEBUG = process.env.NODE_ENV === "development"; //判断当前环境
 
 export default {
   SERVER_ENV,
-  DOMAIN
+  DOMAIN,
+  COOKIE_DOMAIN,
+  HTTP: {
+    PROTOCOL: DEBUG ? "https:" : "http:",
+    WITH_CREDENTIALS: DEBUG ? true : true,
+    TIME_OUT: DEBUG ? 3000 : 3000
+  },
+  ROUTER:{
+    HOME_NAME: "home",
+    LOGIN_NAME: "login"
+  }
 };

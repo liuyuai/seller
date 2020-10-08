@@ -25,7 +25,12 @@
 
 <script>
 // import http from "_s/libs/http/http";
-import { baseService } from "_s/api";
+// import { baseService } from "_s/api";
+import { mapActions } from "vuex";
+import config from "_s/config"
+
+let { HOME_NAME } = config.ROUTER;
+
 export default {
   name: "login",
   data() {
@@ -37,6 +42,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["handleLogin"]),
     doLogin() {
       //在登录情况下 就是开始需要输入账号密码了 涉及到 接口调用  在人员使用的时候  我现在就想 传参的
       //我这边写着简单 了解axios本质来讲是Promise
@@ -56,7 +62,16 @@ export default {
       //   "http://base.test.66buy.com.cn/privates/auth/seller/extLogin",this.form
       // );
 
-      console.log(baseService.extLogin(this.form))
+
+      this.$refs.form.validate(validate => {
+        if(validate){
+          this.$store.dispatch("handleLogin",this.form).then(() => {
+            this.$router.replace({name:HOME_NAME})
+          })
+        }else{
+          return false;
+        }
+      });
 
       // baseService.extLogin(this.form).then(data =>{
       //   console.log(data);

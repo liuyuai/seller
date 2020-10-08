@@ -12,14 +12,18 @@ import QS from "qs"; // QS.stringify 把对象 改成键值对的形式
 那本身是一种封装 你封装的本质原因 自己要明白 要不让换了一个其他的HTTP库 你还是不知道应该怎么封装
 这里的本质 应该是取决于 和后台定义 格式
 
+
 * */
 
 export const createService = function(option) {
   let { baseUrl } = option;
 
-  const service = new axios.create({
+  const service = axios.create();
+
+  let options = {
     baseURL: baseUrl,
     timeout: 1000,
+    method: "post",
     withCredentials: true, //是否跨站点访问控制请求
     transformRequest: [
       data => {
@@ -27,9 +31,17 @@ export const createService = function(option) {
         return data;
       }
     ]
-  });
+  };
+
+  //        platform 是什么东西
   service.interceptors.request.use(function(config) {
     if (config.method === "get") {
+      let paramsStr = QS.stringify(config.params || config.data || {}, {
+        indices: false
+      });
+      if (paramsStr) {
+        config.url = config.url + "?" + paramsStr;
+      }
       config.headers = {
         "Content-Type": "application/json; charset=UTF-8",
         platform: "seller"
@@ -43,11 +55,23 @@ export const createService = function(option) {
     }
     return config;
   });
+  service.interceptors.response.use(function(response) {
+    let data = response.data;
+    if (data.success === true) {
+      return data;
+    } else {
+      return Promise.reject(data);
+    }
+  });
   return {
     post: function(url, data) {
-      return function(){
-        service.post(url, data);
-      };
+      options.url = url;
+      options.data = data;
+      return service(options);
+    },
+    get: function(url, data) {
+      options.url = url;
+      return service(options);
     }
   };
   // return service;
