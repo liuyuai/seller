@@ -1,6 +1,8 @@
 import axios from "axios";
 import QS from "qs";
-import {ResponseError, HttpError } from "../custom-error"
+import {ResponseError, HttpError,ErrorMessgae } from "../custom-error"
+import { formatData } from "@/libs/utils"
+// import _ from "loadsh"
 
 export default class HttpRequest {
   constructor(options) {
@@ -16,13 +18,13 @@ export default class HttpRequest {
       withCredentials: this.withCredentials
     };
   }
-  get(options) {
-    return this.getService(Object.assign(options, { method: "get" }));
+  get(options,fn) {
+    return this.getService(Object.assign(options, { method: "get" }),fn);
   }
-  post(options) {
-    return this.getService(Object.assign(options, { method: "post" }));
+  post(options,fn) {
+    return this.getService(Object.assign(options, { method: "post" }),fn);
   }
-  getService(options) {
+  getService(options,fn) {
     let service = axios.create();
     options = Object.assign(this.getDefaultConfig(), options);
     this.setInterceptors(service);
@@ -44,6 +46,7 @@ export default class HttpRequest {
       } else if (config.method === "post") {
         config.transformRequest = [
           data => {
+            data = formatData(data);
             data = QS.stringify(data);
             return data;
           }
@@ -60,7 +63,8 @@ export default class HttpRequest {
       if(data.code === 0){
         return data.data;
       }else{
-        return Promise.reject(new ResponseError(data));
+        // ErrorMessgae(data)
+        return Promise.reject(data);
       }
     },
       error => {
@@ -75,3 +79,9 @@ export default class HttpRequest {
       });
   }
 }
+
+
+// 什么都不做的时候，错误的时候，直接alert后台错误
+// 特殊code的时候，自定义异常 eg console.log(hello world)
+
+//在特殊状态码的情况下 需要在接口调用的时候catch处 错误来显示错误

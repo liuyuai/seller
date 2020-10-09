@@ -1,5 +1,8 @@
+import { Message } from "element-ui"
+
 export class HttpError extends Error {
   constructor(error) {
+    console.log(error);
     super();
     this.error = error;
     this.code = -1;
@@ -20,3 +23,7 @@ export class RequestError extends Error {
     this.message = data.message;
   }
 }
+
+export const ErrorMessgae = (data) =>{
+  Message.error(data.message);
+};

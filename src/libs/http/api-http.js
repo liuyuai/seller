@@ -4,7 +4,7 @@ import config from "_s/config";
 const HTTP_SETTING = config.HTTP;
 
 const WITH_CREDENTIALS = HTTP_SETTING.WITH_CREDENTIALS;
-const TIMEOUT = HTTP_SETTING.TIMEOUT;
+const TIMEOUT = HTTP_SETTING.TIME_OUT;
 
 export const createRequest = (options = {}) => {
   let {

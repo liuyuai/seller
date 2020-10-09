@@ -3,6 +3,9 @@
 
 在请求头中 platform的用处 不了解
 
+属于自定义属性范畴  具体规定和后端配合  key：value 的形式都不同
+
+
 封装自定义错误是 为什么可以  extends Error  这个完全不知道
 
 
@@ -48,4 +51,17 @@ vueX  state中存储状态
 
 
 
+* **/
+
+
+/* promise 被reject 且没有reject处理器的时候  会触发unhandledrejection 事件
+
+
+
+* **/
+
+/*
+* 分清框架层 和业务层
+*
+* 逻辑 mdzz
 * **/

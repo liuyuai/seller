@@ -4,6 +4,7 @@ import Main from "_c/main.vue";
 import store from "@/store";
 import config from '@/config'
 let {HOME_NAME, LOGIN_NAME} = config.ROUTER;
+import { findChild } from "@/libs/tool"
 
 Vue.use(VueRouter);
 
@@ -19,7 +20,7 @@ const IndexRouter = {
       component: () => import("_v/home")
     }
   ]
-}
+};
 
 const routes = [
   IndexRouter,
@@ -35,12 +36,10 @@ const routes = [
 
 const router = new VueRouter({
   mode: "hash",
-  isAddDynamicMenuRoutes:false,
   routes
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
   //在登录状态下
   const { meta: toMeta = {} } = to;
   if(store.state.user.hasUserInfo){
@@ -76,37 +75,9 @@ router.beforeEach((to, from, next) => {
       //     return result;
       //   }
       // }
-      function findChild(arr) {
-        if(arr.length > 0){
-          let list = arr;
-          let result = [];
-          for(let i = 0;i<list.length;i++){
-            formatChild(result,list[i].subMenus);
-          }
-          return result;
-        }
-      }
-      function formatChild(res,data){
-        for(let i = 0;i<data.length; i++){
-          if(data[i].level === 3){
-            let path = "/"+data[i].state.split(".")[1]+"/" + data[i].state.split(".")[2];
-            let name = data[i].state;
-            let componentStr = data[i].state.split(".").splice(1,2).join("/");
-            res.push({
-              path: path,
-              name: name,
-              component: () => import("_v/"+componentStr)
-            })
-          }
-          if(data[i].subMenus && Array.isArray(data[i].subMenus)){
-            formatChild(res,data[i].subMenus)
-          }
-        }
-      }
 
       IndexRouter.children = [...IndexRouter.children,...result];
       router.addRoutes([IndexRouter]);
-          router.options.isAddDynamicMenuRoutes = true;
       next({ ...to, replace: true });
     })
       .catch(() => {

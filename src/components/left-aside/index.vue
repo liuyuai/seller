@@ -1,6 +1,6 @@
 <template>
     <div class="left-aside">
-        <el-menu default-active="features.order.list" class="el-menu-vertical-demo" @select="selectMenu">
+        <el-menu class="el-menu-vertical-demo" @select="selectMenu">
             <el-submenu :index="item.state" v-for="(item) in leftMenuList" :key="item.id">
                 <template slot="title">
                     <span>{{item.name}}</span>
