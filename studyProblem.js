@@ -54,7 +54,14 @@ vueX  state中存储状态
 * **/
 
 
-/* promise 被reject 且没有reject处理器的时候  会触发unhandledrejection 事件
+/*
+
+使用回调函数
+promise 被reject 且没有reject处理器的时候  会触发unhandledrejection 事件
+
+使用webpack配置
+
+
 
 
 
@@ -104,5 +111,15 @@ fr.onload = function(event){
 在封装axios接口的时候 根本没有考虑到 上传的情况
 elementUI使用的时form的形式来做的  提供了上传的方式方法
 
+
+* **/
+
+
+
+
+/*
+在使用一个东西的时候
+
+1.首先要考虑兼容性的问题  你封装的这个东西 需要给谁使用
 
 * **/
