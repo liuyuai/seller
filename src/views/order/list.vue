@@ -25,18 +25,15 @@
 import CommonTable from "@/components/common/table"
 import { aoService } from "../../api";
 import _ from "loadsh";
-// import moment from "moment"
+import moment from "moment"
 
 export default {
     name: "list",
     data(){
         return {
             query:{
-                // createTimeGE:moment().startOf('d').subtract(31, 'd'),
-                // createTimeLT:moment().endOf('d').subtract(0, 'd')
-
-                createTimeGE:null,
-                createTimeLT:null
+                createTimeGE:moment().startOf('d').subtract(31, 'd'),
+                createTimeLT:moment().endOf('d').subtract(0, 'd')
             },
             tableData:[],
             tableProps:{

@@ -65,3 +65,44 @@ vueX  state中存储状态
 *
 * 逻辑 mdzz
 * **/
+
+
+/* 上传文件
+1.通过form的方式
+<form action="接口" enctype="multipart/form-dat" type="post" target=" iframe的id">
+<input type="file">
+</form>
+
+<ifrmae name='upload' id='uploader1'></iframe>
+这种方式由于不知道 是否上传完成
+所以这可以在页面中添加 iframe
+
+var iframe = document.getElementById("uploader1");
+iframe.onload = function(){
+
+}
+当iframe.onload函数触发时 也就是上传完成了
+
+
+2.formData上传   今天刚知道这个原生方法
+
+如果送出时的编码类型被设为 "multipart/form-data"，它会使用和表单一样的格式。
+var formData = new formData;
+
+formData.append('file',file);
+
+3.fileReader读取文件数据 上传
+
+var fr = new FileReader();
+fr.readAsDataURL(file);
+fr.onload = function(event){
+  var data = event.target.result; // 此处获得的data是base64格式数据
+  img.src = data;
+  执行 ajax
+}
+
+在封装axios接口的时候 根本没有考虑到 上传的情况
+elementUI使用的时form的形式来做的  提供了上传的方式方法
+
+
+* **/
