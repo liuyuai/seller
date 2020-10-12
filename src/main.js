@@ -10,8 +10,12 @@ import store from "./store";
 import ElementUI from 'element-ui';
 import "element-ui/lib/theme-chalk/index.css";
 import "@/libs/promise-reject-catch"
+import Render from './render'
 Vue.config.productionTip = false;
-console.log(Vue.config);
+
+
+Vue.component(Render.name,Render);
+
 
 Vue.use(ElementUI);
 
