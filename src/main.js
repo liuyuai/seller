@@ -7,18 +7,17 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import ElementUI from 'element-ui';
+import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
-import "@/libs/promise-reject-catch"
-import Render from './render'
+import "@/libs/promise-reject-catch";
+import Render from "./render";
+import "./mock";
+
 Vue.config.productionTip = false;
 
-
-Vue.component(Render.name,Render);
-
+Vue.component(Render.name, Render);
 
 Vue.use(ElementUI);
-
 
 /* eslint-disable */
 new Vue({

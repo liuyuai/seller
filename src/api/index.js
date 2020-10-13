@@ -16,7 +16,6 @@ const { DOMAIN } = config;
 
 //_forEach  第一个传参是 几个    第二参数是   value key
 
-
 //在这面添加fn 是为了在接口调用的时候  面对特殊 很特殊的那种情况 来使用不同方法  使用的时 callback的方式来解决的
 
 function setService(serverList, serverName) {
@@ -25,7 +24,9 @@ function setService(serverList, serverName) {
   _.forEach(serverList, (urlList, mehtod) => {
     _.forEach(urlList, (url, urlName) => {
       result[urlName] = function(data = {}, fn) {
-        return createRequest({ baseUrl })[mehtod]({ url, data },fn);
+        //由于当前项目固定 我们可以在这里进行mock注册吧，可以拦截接口但是返回的数据会有问题
+
+        return createRequest({ baseUrl })[mehtod]({ url, data }, fn);
       };
     });
   });

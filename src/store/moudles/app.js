@@ -1,6 +1,6 @@
-import styleConfig from '@/config/style-config'
+import styleConfig from "@/config/style-config";
 
-let {APP_STYLE, HEAD_STYLE, LEFT_STYLE, MAIN_STYLE} = styleConfig;
+let { APP_STYLE, HEAD_STYLE, LEFT_STYLE, MAIN_STYLE } = styleConfig;
 
 /* eslint-disable */
 export default {

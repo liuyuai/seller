@@ -4,7 +4,7 @@ module.exports = {
   devServer: {
     port: 8080,
     open: true,
-    disableHostCheck:true
+    disableHostCheck: true
   },
   configureWebpack: {
     resolve: {

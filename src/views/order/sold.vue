@@ -5,11 +5,9 @@
 </template>
 
 <script>
-  export default {
-    name: "sold"
-  }
+export default {
+  name: "sold"
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

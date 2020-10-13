@@ -1,17 +1,17 @@
 const APP_STYLE = {
-  background:"#f1f3f8"
+  background: "#f1f3f8"
 };
 
 const HEAD_STYLE = {
-  background:"#ffffff"
+  background: "#ffffff"
 };
 
 const LEFT_STYLE = {
-  background:"#ffffff"
+  background: "#ffffff"
 };
 
 const MAIN_STYLE = {
-  background:"#ffffff"
+  background: "#ffffff"
 };
 
 export default {
@@ -19,4 +19,4 @@ export default {
   HEAD_STYLE,
   LEFT_STYLE,
   MAIN_STYLE
-}
+};

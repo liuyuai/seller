@@ -47,7 +47,7 @@ export default {
     WITH_CREDENTIALS: DEBUG ? true : true,
     TIME_OUT: DEBUG ? 3000 : 3000
   },
-  ROUTER:{
+  ROUTER: {
     HOME_NAME: "home",
     LOGIN_NAME: "login"
   }

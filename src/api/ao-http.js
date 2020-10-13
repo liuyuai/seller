@@ -1,13 +1,13 @@
 import axios from "axios";
-import QS from "qs"
+import QS from "qs";
 import config from "@/config";
-import {HttpError} from "../libs/custom-error";
-import { formatData } from "@/libs/utils"
+import { HttpError } from "../libs/custom-error";
+import { formatData } from "@/libs/utils";
 const { DOMAIN } = config;
 
 const instance = axios.create({
-  baseURL:`//ao${DOMAIN}`,
-  timeout:1000
+  baseURL: `//ao${DOMAIN}`,
+  timeout: 1000
 });
 
 instance.interceptors.request.use(config => {
@@ -37,30 +37,27 @@ instance.interceptors.request.use(config => {
   }
   return config;
 });
-instance.interceptors.response.use(response => {
-      let data = response.data;
-      if(data.code === 0){
-        return data.data;
-      }else{
-        return Promise.reject(data);
-      }
-    },
-    error => {
-      let rejectData;
-      switch (error.constructor) {
-        case axios.Cancel:
-          break;
-        default:
-          rejectData = new HttpError(error);
-      }
-      return Promise.reject(rejectData);
-    });
+instance.interceptors.response.use(
+  response => {
+    let data = response.data;
+    if (data.code === 0) {
+      return data.data;
+    } else {
+      return Promise.reject(data);
+    }
+  },
+  error => {
+    let rejectData;
+    switch (error.constructor) {
+      case axios.Cancel:
+        break;
+      default:
+        rejectData = new HttpError(error);
+    }
+    return Promise.reject(rejectData);
+  }
+);
 
-
-
-export const handleLoginIn = data =>{
-  return instance.post(
-      "privates/auth/seller/extLogin",
-      data
-  )
+export const handleLoginIn = data => {
+  return instance.post("privates/auth/seller/extLogin", data);
 };

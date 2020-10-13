@@ -4,10 +4,7 @@
       <h3 class="title text-center">商家登录</h3>
       <el-form :model="form" ref="form">
         <div class="line">
-          <el-input
-            v-model="form.username"
-            placeholder="请输入用户名"
-          ></el-input>
+          <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
         </div>
         <div class="line">
           <el-input v-model="form.password" placeholder="请输入密码"></el-input>
@@ -15,9 +12,7 @@
         <div class="line text-right">
           <el-button type="text">忘记密码</el-button>
         </div>
-        <el-button style="width: 100%" type="primary" @click="doLogin"
-          >登录</el-button
-        >
+        <el-button style="width: 100%" type="primary" @click="doLogin">登录</el-button>
       </el-form>
     </div>
   </div>
@@ -27,7 +22,7 @@
 // import http from "_s/libs/http/http";
 // import { baseService } from "_s/api";
 import { mapActions } from "vuex";
-import config from "_s/config"
+import config from "_s/config";
 
 let { HOME_NAME } = config.ROUTER;
 
@@ -62,13 +57,13 @@ export default {
       //   "http://base.test.66buy.com.cn/privates/auth/seller/extLogin",this.form
       // );
 
-
       this.$refs.form.validate(validate => {
-        if(validate){
-          this.$store.dispatch("handleLogin",this.form).then(() => {
-            this.$router.replace({name:HOME_NAME})
-          })
-        }else{
+        if (validate) {
+          this.$store.dispatch("handleLogin", this.form).then(data => {
+            console.log(data);
+            this.$router.replace({ name: HOME_NAME });
+          });
+        } else {
           return false;
         }
       });

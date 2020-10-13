@@ -1,4 +1,4 @@
-import { Message } from "element-ui"
+import { Message } from "element-ui";
 
 export class HttpError extends Error {
   constructor(error) {
@@ -10,7 +10,7 @@ export class HttpError extends Error {
   }
 }
 
-export class ResponseError extends Error{
+export class ResponseError extends Error {
   constructor(data) {
     super();
     this.code = 200;
@@ -24,6 +24,6 @@ export class RequestError extends Error {
   }
 }
 
-export const ErrorMessgae = (data) =>{
+export const ErrorMessgae = data => {
   Message.error(data.message);
 };
