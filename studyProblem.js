@@ -353,7 +353,11 @@ wai-aria是无障碍网页应用  也就是针对残疾人（ps:盲人） 如屏
 *
 * 打包工具 (未习得)
 *
-* nginx 线上配置
+* nginx 线上配置 简单应用
+*
+* vue-cli 中执行build的方式 生成dist文件  然后把文件放在服务器上  通过apach、nginx或其他的方式 配置到dist的index.html文件
+*
+*
 *
 * vue-admin  iview
 *
@@ -364,9 +368,12 @@ wai-aria是无障碍网页应用  也就是针对残疾人（ps:盲人） 如屏
 
 /*
  * import 和 require的区别
+ *  1.都是模块引入的方式
+ *  import是es6 moudle的方式
+ *  require是commonjs的烦死
  *
- * require 是AMD规范引入方式     在运行时调用  所以require理论上可以放在任何地方
- * import 是es6的语法标准        在编译时调用  必须放在文件开头
+ * require 是AMD规范引入方式     在运行时调用  所以require理论上可以放在任何地方 值的浅拷贝
+ * import 是es6的语法标准        在编译时调用  必须放在文件开头                 属于值的引用
  *
  * **/
 
@@ -462,10 +469,6 @@ Plop 通过其语法 规定需要创建的文件
  * 需要学习http/ https/http2
  *    https 握手
  *    http2 的特点
- *    二进制传输
- *    Header 压缩，顺便吹了一下哈夫曼编码
- *    多路复用
- *    服务器推送
  * 浏览器缓存策略
  * 跨域处理
  *  webSocket
@@ -474,3 +477,257 @@ Plop 通过其语法 规定需要创建的文件
  * tree-shaking 按需要 打包
  * HMR 实现原理
  * **/
+
+/*需要学习http/https/http2  我在做项目中应该怎么使用   目前看主要是 在分开发环境和生产环境 使用http 和HTTPS 来区分
+  
+  #HTTP 是一种TCP/IP的协议
+    HTTP 一种client-server协议（PS：客户端-服务器）
+    客户端 与 服务器 能够交互（客户端发起请求，服务器返回响应）之前， 必须在这两这间 建立一个 TCP链接
+      
+      @HTTP会话方式
+        1.建立TCP三次握手            In my Style      我行了   好 我知道了 你真的行么   我真的行
+                                                      走啊  真去啊  真去 go
+            
+           @TCP三次握手是什么
+            1.三次握手就是 在TCP连接的时候，客户端和服务端一共发了三个包
+              第一次握手
+               客户端给服务端发一个 SYN报文，并指明 客户端的初始化序列好ISN ，此时客户端 处于 SYN_SEND状态
+              第二次握手
+                服务器接收到客户端的SYN报文后，会以自己的SYN报文作为应答，并且也指定了自己的初始化序列ISN。
+                同时会把客户端的ISN+1作为ACK的值，表示自己已经接收到了客户端的SYN，此时服务器处于SYN_REVD状态
+                
+                服务器 发送给 客户端 的确认报文 在确认报文段中SYN=1，ACK=1，确认号ack=x+1，初始序号seq=y。
+                
+                  PS:半连接队列  在服务器发送给 客户端 发完SYN-ACK包后。如果没有收到客户端的确认包，服务器进行重传
+                    等待一段时间后还没有，发送第二次重传。 如果重传次数超过规定的最大重传次数，系统将该链接从 半连接队列中删除
+                
+                  安全问题  SYN攻击  Dos攻击 DOS（Denial of Service）拒绝服务
+                   短时间内伪造大量不存在的IP地址，并向Server发送请求。大量堆积队列中  由于队列满 导致 正常请求被丢弃
+                   
+                   防御SYN攻击的方法
+                    SYN timeout
+                    增加最大半连接数
+                    过滤网关防护
+                    SYN cookies技术
+           
+              第三次握手
+                客户端接收到服务端的SYN报文之后，会发送一个ACK报文，表示已经收到了SYN报文，此时客户端处于ESTABLISHED（ps:已确立）状态。
+                服务器接收到ACK报文之后，也处于ESTABLISHED状态，此时 双方连接成功。
+        2.发送请求
+        3.回送响应信息
+        4.关闭连接
+          四次挥手  也是发四个包
+                    
+                    1:我要下班了
+                    2:哦
+                    。。。
+                    2:我也要下班了 || 等我在忙会啊，在下班
+                    1：好知道了 你先走吧  我等你走了 我在走
+          
+          第一次挥手：客户端发送一个FIN报文，指定一个序列号。此时 客户端 进入 FIN_WAIT1状态
+          
+          第二次挥手 服务端收到FIN，会发送ACK报文，且把客户端的序列号+1作为ACK报文的序列号值，表明已经收到了客户端的报文
+                    此时服务器处于CLOSE_WAIT状态，客户端进入FIN_WAIT2状态。
+                    
+          第三次挥手 如果服务端也想断开连接了，和客户端的第一次挥手一样，发送FIN报文，并指定一个序列号。此时服务端处于LAST_ACK的状态
+          
+          第四次挥手 客户端收到FIN之后，一样发送一个ACK报文回答，然后进入到TIME_WAIT状态。需要过一阵子以确保服务器接收到自己的ACK报文之后
+                    进入CLOSED状态 服务端收到ACK报文之后 就处于关闭连接了，处于CLOSED状态。
+         
+         
+       
+    为了减轻这些缺陷，HTTP/1.1引入了 流水线（被证明难以实现）和 持久连接（keep-alive）
+ 
+ 
+  #HTTPS
+    @HTTP Strict Transport Security (简称HSTS)
+   
+    HTTPS 相对于 HTTP  添加了 SSL/TLS加密
+      @所谓对称加密   加密解密使用同一个密钥
+      @非对称加密   加密和解密用的并不是同一个密钥
+      
+      HTTPS 握手
+
+    
+  #SPDY 基于TCP的会话层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验。
+    1.降低延迟  HTTP高延迟问题 SPDY采用了多路复用。 多路复用（多个请求共享一个tcp）
+    2.请求优先级   SPDY允许给 每个request 设置优先级  这样我们可以对关键请求设置 高的优先级
+    3.header压缩
+    4.基于HTTPS的加密协议传输，提高数据传输的可靠性
+    5.服务器推送 ，
+    
+    
+  #HTTP2 新特性
+   二进制格式
+   多路复用
+   header压缩
+      HTTP2.0使用encoder来减少需要传输的header大小，通讯双方各自cache一份header fields表
+   服务端推送
+   
+  *  浏览器缓存策略
+    Status Code: 200  (from disk cache)  表示从硬盘中读取
+    Status Code: 200  (from memory cache) 表示从内存中读取
+    
+    
+    @强缓存
+        用户发送的请求，直接从客户端缓存中获取，不发送请求到服务器,不予服务器发生交互行为
+    @协商缓存
+        用户发出请求，发送到服务器后，有服务器判断是否从缓存中获取资源
+        @共同点
+          客户端获得的数据最后都是从客户端缓存中获得。
+        @区别
+          从名字就可以看出，强缓存不与服务器交互，而协商缓存则需要与服务器交互
+          
+          
+        
+        Response Header 中
+          date: 浏览器请求资源的时间
+          etag： http 资源的唯一标识符
+          expires: http 设置资源的过期时间
+          last-modified(修改): http 资源上一次修改的时间、
+          
+          #在资源文件的Response Header 中带有 last-modified  但是缺少expires和 cache-control 用来表示资源缓存过期的字段
+          浏览器会使用  启发式缓存来确认该资源缓存的过期时间
+          
+          浏览器会根据 date 和 last-modified 之间的时间差值的10%来作为资源缓存的过期时间
+          
+        Request Header
+        cache-control 首次资源请求
+        
+        
+        #！强缓存
+        
+        服务器可以通过Response Header 使用功能expires 和 cache-control 来设置一个有效时间，当浏览器再次请求资源时会判断本地
+        缓存是否已过期
+        1.如果没有过期那么直接从本地读取，不会残生http请求，此为 强缓存
+        2.如果已过期，那么浏览器将重新向服务器请求资源，这一过程往往伴随着 缓存检测。
+        
+        expires
+        这是HTTP1.0版本产物,属于Response Headers，使用UTC格式的日期时间字符串表示资源的过期时间
+        
+        @问题：使用expires设置的过期是以服务器时间为准的，他可能跟浏览器不一致，不同时区也会有存在影响。
+        
+        cache-control
+        这是HTTP1.1版本的产物，属于 Response Headers，提供来了更多的缓存策略，可以根据三种不同性质通过逗号进行组合使用：
+          1.是否不使用缓存： cache-control:
+                                        no-store/  禁止浏览器缓存资源
+                                        no-cache/不管本地缓存是否过期 都需要进行缓存检测
+                                        must-revalidate 本地资源缓存没有过期 必须是使用本地
+          2.是否为私有缓存： cache-control：public/ 公共缓存 表示浏览器和代理服务器都可以设置缓存
+                                          private 私有缓存，仅服务器设置缓存
+          3.设置过期时间: cache-control: max-age ：60 单位秒  覆盖expires
+                                      /s-maxage  在public下有效
+                                      
+           使用max-age的有点在于设置的过期时间是一个相对于浏览器的时间，不受服务器和浏览器的时间不一致的影响。
+        
+      
+        
+        
+        #！协商缓存
+        
+        当浏览器重新向服务器请求资源时,如果原先的Response Header 中 有last-modified 和 etag信息，
+        那么在Request Headers 中通过 if-modified-since 和 if-none-match 将之前的信息带给服务器进行检测。
+        如果服务器资源相对于本地的资源缓存没有发生变更，那么将会返回304状态码，表示资源为更新，让浏览器使用
+        本地的资源缓存，这就是叫协商缓存
+        
+        如果原先的 Response Headers 中没有 last-modified 和 etag 信息，那么将从服务器重新下载资源文件。
+        
+        缓存检测
+        
+        HTTP1.0
+        一.通过last-modified 和 if-modified-since
+            1.last-modified 属于Response-Headers, 表示资源最后一次修改，
+            
+            2.if-modified-since 属于Request Headers, 用来判断服务器资源是否在该传递的时间之后做了修改，
+              如果没有修改那么服务器返回304，让浏览器使用资源缓存
+              
+        HTTP1.1
+        二.通过etag 和 if-match-none-match
+            1.etag属于  Response Header， 表示资源文件的唯一标识，由服务器生成
+            2.if-none-match Request Header，用来判断服务器资源与该传递的标识符一致，如果一致则表示文件没有
+            修改过，服务器将返回304状态码，让浏览器使用资源缓存
+            会覆盖 if-modified-since的设置
+            
+        #比较
+          使用etag来判断服务器资源是否发生修改，主要考虑
+          1.last-modified 只能精确到秒，而有些服务器资源可能在1秒进行了多次修改。
+          2.服务器资源文件，有时也会自动生成，但是内容没有发生改变
+          
+          
+          集群部署
+          
+          html,css,js,img,font 应该使用哪种缓存方式.
+          
+          1.用户能访问的一定是 index.html文件  所以一定不使用强缓存
+          
+          为什么要使用缓存呢，让页面访问缓存 来达到更快   都会使用强缓存
+          
+          那怎么在 资源文件发生改变后能知道
+          
+          那就是改变 资源文件的文件名    可以通过字符串拼接的方式  在原有文件名后面 + 文件哈希值。这样和上次的文件名不一样就会从新请求
+          
+          
+          哈希值 md5
+          
+          
+          
+          PWA 今晚看这个
+          
+          CacheStorage  不兼容 IE
+          
+          离线缓存
+          
+          可以用JS对缓存进行增删改查2
+          
+          
+          
+          
+          
+         
+          
+         
+         
+          
+ 
+ *  算法问题
+ * 跨域有了解过吗
+ * localstorage、sessionStorage 和 cookie 的区别
+ * cookie 跨域时候要如何处理
+ * electron 这个是什么东西
+ * webview 是什么  和
+ *  webpack 的性能优化 tree-shaking
+ * webSocket 和 ajax 的区别
+ *  HMR 实现原理
+ * 从 url 到页面显示
+ * **/
+
+/*
+*
+类型，涉及以下：
+类型种类
+判断
+转换
+深度拷贝
+闭包，涉及以下：
+作用域
+v8 垃圾回收
+变量提升
+异步，涉及以下：
+Promsie 的历史，用法，简单手写 Promsie 实现
+async await 原理，generator
+宏任务与微任务区别
+原型链，涉及以下
+prototype和 __proto__
+继承
+oop 编程思想
+模块化
+CommonJS 和 ES6 module
+AMD 与 CMD 区别（比较旧可以忽略）
+ES6 特性
+let const
+箭头函数
+Set、Map、WeakSet 和 WeakMap
+之前提及的 Promsie，async，Class，Es6 module
+参考资料：
+
+* **/
