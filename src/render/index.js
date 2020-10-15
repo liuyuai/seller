@@ -6,7 +6,7 @@ export default {
   props: {
     tag: {
       type: String,
-      default: "div"
+      default: "h1"
     },
     name: {
       type: String,
@@ -17,7 +17,7 @@ export default {
   computed: {},
 
   render(createElement) {
-    console.log(this.$slots.default);
-    return createElement(this.tag, this.$slots.default);
+    return createElement("div", { style: { color: "red"
+    } }, [this.name, createElement("h1", "一则头条"), createElement("h2", "二则头条")]);
   }
 };

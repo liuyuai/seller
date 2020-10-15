@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    <cool-name>dasdad</cool-name>
+  </div>
 </template>
 
 <script>
