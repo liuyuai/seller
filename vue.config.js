@@ -6,6 +6,14 @@ module.exports = {
     open: true,
     disableHostCheck: true
   },
+  chainWebpack:config => {
+    config.module
+        .rule('vue')
+        .test(/\.vue$/)
+        .use('promise-loader')
+        .loader('promise-loader')
+        .end()
+  },
   configureWebpack: {
     resolve: {
       alias: {
@@ -13,6 +21,9 @@ module.exports = {
         _v: path.resolve(__dirname, "src/views"),
         _s: path.resolve(__dirname, "src")
       }
+    },
+    resolveLoader: {
+      modules: ['node_modules','./loaders/'],
     }
   }
 };
