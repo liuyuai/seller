@@ -241,6 +241,10 @@ elementUI 可以全局引入 也可以按需引入
 
 按需导入可以在这个组件添加一个 install方法 来实行 Vue.components("组件名",组件)
 
+全局引入 实际上是通过 执行install这个方法  然后遍历所有组件的对象 通过Vue.components()来注册
+
+局部引入 是在编写每个组件后 都会对这和组件  添加一个install的方法 里面仅通过Vue.components()离来注册当前组件
+
 封装组件的基本思想
 
 
@@ -795,6 +799,7 @@ Plop 通过其语法 规定需要创建的文件
  *        location / {
  *          add_header Access-Control-Allow-Origin *;
  *        }
+          反向代理   把域名 通过代理的方式
  *
  *    #4.WebSocket协议跨域
  *    #5.postMessage跨域
@@ -889,6 +894,12 @@ Set、Map、WeakSet 和 WeakMap
 *
 *
 * **/
+
+/*
+* 使用思维导图 来构建自己的记忆树
+*
+* **/
+
 
 
 
