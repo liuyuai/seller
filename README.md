@@ -1,4 +1,5 @@
-#文档说明
+## 文档说明
+
 目录结构搭建，axios封装，Vuex全局状态管理,router搭建以及权限状态，mock数据结构来实现接口使用Eslint以及git
 的hook函数实现代码的commit阶段和push阶段的格式化。加入使用Jest的单元测试。
 
